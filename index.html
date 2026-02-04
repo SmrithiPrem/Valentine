@@ -11,30 +11,31 @@
 
 body {
   margin: 0;
+  height: 100vh;
   background: linear-gradient(135deg, #ffc0cb, #ff9abf);
-  overflow-x: hidden;
+  overflow: hidden;
   text-align: center;
   color: #b30059;
   font-family: 'Pacifico', cursive;
 }
 
-/* PASSWORD SCREEN */
+/* PASSWORD */
 #lockScreen {
   position: fixed;
   inset: 0;
-  background: linear-gradient(135deg, #ffc0cb, #ff9abf);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 50;
+  background: inherit;
+  z-index: 100;
 }
 
 .lock-box {
   background: white;
-  padding: 45px 35px;
-  border-radius: 28px;
+  padding: 40px 30px;
+  border-radius: 25px;
   width: 90%;
-  max-width: 360px;
+  max-width: 350px;
   box-shadow: 0 20px 40px rgba(0,0,0,0.25);
 }
 
@@ -47,7 +48,6 @@ body {
   border-radius: 22px;
   border: 1px solid #ff4d88;
   font-size: 1.1rem;
-  outline: none;
 }
 
 .lock-box button {
@@ -58,7 +58,6 @@ body {
   background: #ff4d88;
   color: white;
   font-size: 1.2rem;
-  cursor: pointer;
 }
 
 #error {
@@ -67,57 +66,46 @@ body {
   margin-top: 10px;
 }
 
-/* MAIN CONTENT */
-section {
-  min-height: 100vh;
+/* SCENES */
+.scene {
+  position: absolute;
+  inset: 0;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 50px 25px;
+  padding: 40px 25px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 1s ease;
 }
 
-h1 {
-  font-size: 3.6rem;
-  margin-bottom: 20px;
+.scene.active {
+  opacity: 1;
+  transform: translateY(0);
 }
 
+h1 { font-size: 3.8rem; }
 p {
-  font-size: 1.7rem;
+  font-size: 1.8rem;
   max-width: 750px;
   line-height: 1.6;
 }
 
-/* TYPEWRITER */
-.type {
-  border-right: 3px solid #b30059;
-  white-space: nowrap;
-  overflow: hidden;
-  animation: blink 0.7s infinite;
-}
-
-@keyframes blink {
-  50% { border-color: transparent; }
-}
-
 /* BUTTONS */
 .buttons {
-  margin-top: 40px;
   position: relative;
-  height: 180px;
+  height: 200px;
+  margin-top: 40px;
 }
 
-button {
-  font-size: 1.4rem;
-  padding: 16px 38px;
-  border-radius: 35px;
+button.choice {
+  font-size: 1.5rem;
+  padding: 18px 42px;
+  border-radius: 40px;
   border: none;
-  cursor: pointer;
   position: absolute;
-  transition: transform 0.2s;
+  cursor: pointer;
 }
-
-button:hover { transform: scale(1.1); }
 
 #yesBtn {
   background: #ff4d88;
@@ -138,67 +126,51 @@ button:hover { transform: scale(1.1); }
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(255, 192, 203, 0.95);
-  z-index: 40;
+  background: rgba(255,192,203,0.95);
+  z-index: 90;
+  display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   font-size: 3.2rem;
 }
 
-/* FLOATING HEARTS */
-.heart {
+/* HEARTS */
+.heart, .explode-heart {
   position: fixed;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   background: red;
   transform: rotate(45deg);
-  animation: float 8s linear infinite;
   z-index: 0;
 }
 
-.heart::before,
-.heart::after {
+.heart::before, .heart::after,
+.explode-heart::before, .explode-heart::after {
   content: "";
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   background: red;
   position: absolute;
   border-radius: 50%;
 }
 
-.heart::before { top: -8px; }
-.heart::after { left: -8px; }
+.heart::before, .explode-heart::before { top: -9px; }
+.heart::after, .explode-heart::after { left: -9px; }
+
+.heart {
+  animation: float 9s linear infinite;
+}
 
 @keyframes float {
   from { transform: translateY(110vh) rotate(45deg); opacity: 1; }
   to { transform: translateY(-10vh) rotate(45deg); opacity: 0; }
 }
 
-/* HEART EXPLOSION */
 .explode-heart {
-  position: fixed;
-  width: 18px;
-  height: 18px;
-  background: red;
-  transform: rotate(45deg);
   animation: explode 1s ease-out forwards;
   pointer-events: none;
-  z-index: 60;
 }
-
-.explode-heart::before,
-.explode-heart::after {
-  content: "";
-  width: 18px;
-  height: 18px;
-  background: red;
-  position: absolute;
-  border-radius: 50%;
-}
-
-.explode-heart::before { top: -9px; }
-.explode-heart::after { left: -9px; }
 
 @keyframes explode {
   to {
@@ -215,28 +187,31 @@ button:hover { transform: scale(1.1); }
 <div id="lockScreen">
   <div class="lock-box">
     <h2>🔒 Private</h2>
-    <p>Enter our anniversary date in numbers 💕</p>
-    <input id="password" type="password" />
+    <p>Enter our anniversary date 💕</p>
+    <input id="password" />
     <button id="unlockBtn">Unlock 💖</button>
     <div id="error">Wrong password 😜</div>
   </div>
 </div>
 
-<section>
-  <h1 class="type" id="t1"></h1>
-</section>
+<!-- SCENES -->
+<div class="scene active" id="scene1">
+  <h1 id="t1"></h1>
+</div>
 
-<section>
-  <p class="type" id="t2"></p>
-</section>
+<div class="scene" id="scene2">
+  <p id="t2"></p>
+</div>
 
-<section>
-  <h1>Will you be my Valentine? 💘</h1>
-  <div class="buttons">
-    <button id="yesBtn">Yes 💖</button>
-    <button id="noBtn">No 😜</button>
+<div class="scene" id="scene3">
+  <div>
+    <h1>Will you be my Valentine? 💘</h1>
+    <div class="buttons">
+      <button class="choice" id="yesBtn">Yes 💖</button>
+      <button class="choice" id="noBtn">No 😜</button>
+    </div>
   </div>
-</section>
+</div>
 
 <div id="popup">
   <div>YAYYY!! 💋💐</div>
@@ -246,85 +221,89 @@ button:hover { transform: scale(1.1); }
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
-  const unlockBtn = document.getElementById("unlockBtn");
-  const passwordInput = document.getElementById("password");
-  const lockScreen = document.getElementById("lockScreen");
-  const errorMsg = document.getElementById("error");
+const CORRECT_PASSWORD = "31102025";
 
-  // 🔐 CHANGE THIS TO YOUR ANNIVERSARY (NUMBERS ONLY)
-  const CORRECT_PASSWORD = "31102025";
+const lock = document.getElementById("lockScreen");
+const error = document.getElementById("error");
 
-  unlockBtn.addEventListener("click", () => {
-    if (passwordInput.value === CORRECT_PASSWORD) {
-      lockScreen.style.display = "none";
-    } else {
-      errorMsg.style.display = "block";
-    }
-  });
+document.getElementById("unlockBtn").onclick = () => {
+  if (password.value === CORRECT_PASSWORD) {
+    lock.style.display = "none";
+    startStory();
+  } else {
+    error.style.display = "block";
+  }
+};
 
-  /* TYPEWRITER */
-  function typeText(el, text, speed = 80) {
+/* PERFECT TYPEWRITER */
+function type(el, text, speed = 70) {
+  return new Promise(resolve => {
+    el.textContent = "";
     let i = 0;
-    const interval = setInterval(() => {
-      el.textContent += text[i];
-      i++;
-      if (i === text.length) clearInterval(interval);
+    const timer = setInterval(() => {
+      el.textContent += text[i++];
+      if (i === text.length) {
+        clearInterval(timer);
+        resolve();
+      }
     }, speed);
-  }
-
-  typeText(document.getElementById("t1"), "Hi Sanjeev 😉");
-
-  setTimeout(() => {
-    typeText(
-      document.getElementById("t2"),
-      "Every day with you feels like home ❤️Oru murai paarthal pala murai inikira enna visithiramo, nanbane enaku kaadhalan aanal athu than sarithiramo♥️"
-    );
-  }, 1200);
-
-  /* FLOATING HEARTS */
-  setInterval(() => {
-    const heart = document.createElement("div");
-    heart.className = "heart";
-    heart.style.left = Math.random() * 100 + "vw";
-    heart.style.animationDuration = Math.random() * 3 + 6 + "s";
-    document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 9000);
-  }, 300);
-
-  /* NO BUTTON */
-  const noBtn = document.getElementById("noBtn");
-  noBtn.addEventListener("mouseover", moveNo);
-  noBtn.addEventListener("click", moveNo);
-
-  function moveNo() {
-    noBtn.style.left = Math.random() * 80 + "vw";
-    noBtn.style.top = Math.random() * 80 + "px";
-  }
-
-  /* YES BUTTON + HEART EXPLOSION */
-  const yesBtn = document.getElementById("yesBtn");
-  const popup = document.getElementById("popup");
-
-  yesBtn.addEventListener("click", () => {
-    const r = yesBtn.getBoundingClientRect();
-
-    for (let i = 0; i < 30; i++) {
-      const h = document.createElement("div");
-      h.className = "explode-heart";
-      h.style.left = r.left + r.width / 2 + "px";
-      h.style.top = r.top + r.height / 2 + "px";
-      h.style.setProperty("--x", (Math.random() - 0.5) * 300 + "px");
-      h.style.setProperty("--y", (Math.random() - 0.5) * 300 + "px");
-      document.body.appendChild(h);
-      setTimeout(() => h.remove(), 1000);
-    }
-
-    popup.style.display = "flex";
   });
+}
+
+async function startStory() {
+  await type(t1, "Hi Sanjeev 😉");
+  await wait(800);
+  switchScene(2);
+  await type(
+    t2,
+    "From random laughs to quiet moments, from silly jokes to deep conversations… every day with you feels like home my husband ❤️Oru murai paarthal pala murai inikira enna visithiramo, nanbane enaku kaadhalan aanal athu than sarithiramo♥️"
+  );
+  await wait(1000);
+  switchScene(3);
+}
+
+function switchScene(n) {
+  document.querySelectorAll(".scene").forEach(s => s.classList.remove("active"));
+  document.getElementById(`scene${n}`).classList.add("active");
+}
+
+function wait(ms) {
+  return new Promise(r => setTimeout(r, ms));
+}
+
+/* FLOATING HEARTS */
+setInterval(() => {
+  const h = document.createElement("div");
+  h.className = "heart";
+  h.style.left = Math.random() * 100 + "vw";
+  document.body.appendChild(h);
+  setTimeout(() => h.remove(), 9000);
+}, 300);
+
+/* NO BUTTON */
+noBtn.onmouseover = noBtn.onclick = () => {
+  noBtn.style.left = Math.random() * 80 + "vw";
+  noBtn.style.top = Math.random() * 80 + "px";
+};
+
+/* YES BUTTON */
+yesBtn.onclick = () => {
+  const r = yesBtn.getBoundingClientRect();
+  for (let i = 0; i < 30; i++) {
+    const e = document.createElement("div");
+    e.className = "explode-heart";
+    e.style.left = r.left + r.width/2 + "px";
+    e.style.top = r.top + r.height/2 + "px";
+    e.style.setProperty("--x", (Math.random()-0.5)*300+"px");
+    e.style.setProperty("--y", (Math.random()-0.5)*300+"px");
+    document.body.appendChild(e);
+    setTimeout(() => e.remove(), 1000);
+  }
+  popup.style.display = "flex";
+};
 
 });
 </script>
-
 
 </body>
 </html>
