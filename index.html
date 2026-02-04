@@ -246,13 +246,19 @@ button:hover { transform: scale(1.1); }
 <script>
 /* PASSWORD */
 function unlock() {
-  if (password.value === "31/10/2025") {
-    lockScreen.style.display = "none";
-  } else {
-    error.style.display = "block";
-  }
-}
+  const input = document.getElementById("password");
+  const lock = document.getElementById("lockScreen");
+  const err = document.getElementById("error");
 
+  // CHANGE THIS TO YOUR ANNIVERSARY / SECRET
+  const correctPassword = "31102025"; 
+
+  if (input.value === correctPassword) {
+    lock.style.display = "none";
+  } else {
+    err.style.display = "block";
+  }
+} 
 /* TYPEWRITER */
 function typeText(el, text, speed = 80) {
   let i = 0;
