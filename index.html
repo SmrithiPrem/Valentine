@@ -217,7 +217,7 @@ button:hover { transform: scale(1.1); }
     <h2>🔒 Private</h2>
     <p>Enter our anniversary date in numbers 💕</p>
     <input id="password" type="password" />
-    <button onclick="unlock()">Unlock 💖</button>
+    <button id="unlockBtn">Unlock 💖</button>
     <div id="error">Wrong password 😜</div>
   </div>
 </div>
@@ -244,75 +244,87 @@ button:hover { transform: scale(1.1); }
 </div>
 
 <script>
-/* PASSWORD */
-function unlock() {
-  const input = document.getElementById("password");
-  const lock = document.getElementById("lockScreen");
-  const err = document.getElementById("error");
+document.addEventListener("DOMContentLoaded", () => {
 
-  // CHANGE THIS TO YOUR ANNIVERSARY / SECRET
-  const correctPassword = "31102025"; 
+  const unlockBtn = document.getElementById("unlockBtn");
+  const passwordInput = document.getElementById("password");
+  const lockScreen = document.getElementById("lockScreen");
+  const errorMsg = document.getElementById("error");
 
-  if (input.value === correctPassword) {
-    lock.style.display = "none";
-  } else {
-    err.style.display = "block";
+  // 🔐 CHANGE THIS TO YOUR ANNIVERSARY (NUMBERS ONLY)
+  const CORRECT_PASSWORD = "31102025";
+
+  unlockBtn.addEventListener("click", () => {
+    if (passwordInput.value === CORRECT_PASSWORD) {
+      lockScreen.style.display = "none";
+    } else {
+      errorMsg.style.display = "block";
+    }
+  });
+
+  /* TYPEWRITER */
+  function typeText(el, text, speed = 80) {
+    let i = 0;
+    const interval = setInterval(() => {
+      el.textContent += text[i];
+      i++;
+      if (i === text.length) clearInterval(interval);
+    }, speed);
   }
-} 
-/* TYPEWRITER */
-function typeText(el, text, speed = 80) {
-  let i = 0;
-  const interval = setInterval(() => {
-    el.textContent += text[i];
-    i++;
-    if (i === text.length) clearInterval(interval);
-  }, speed);
-}
 
-typeText(t1, "Hi Sanjeev 😉");
-setTimeout(() => {
-  typeText(
-    t2,
-    "Every day with you feels like home♥️, my husband.
-    oru murai parthal, pala murai inikira ena visithiramo
-    nanbane enaku kadhalan aanal athu than sarithiramo"
-  );
-}, 1200);
+  typeText(document.getElementById("t1"), "Hi Sanjeev 😉");
 
-/* FLOATING HEARTS */
-setInterval(() => {
-  const heart = document.createElement("div");
-  heart.className = "heart";
-  heart.style.left = Math.random() * 100 + "vw";
-  heart.style.animationDuration = Math.random() * 3 + 6 + "s";
-  document.body.appendChild(heart);
-  setTimeout(() => heart.remove(), 9000);
-}, 300);
+  setTimeout(() => {
+    typeText(
+      document.getElementById("t2"),
+      "Every day with you feels like home ❤️Oru murai paarthal pala murai inikira enna visithiramo, nanbane enaku kaadhalan aanal athu than sarithiramo♥️"
+    );
+  }, 1200);
 
-/* NO BUTTON */
-noBtn.addEventListener("mouseover", moveNo);
-noBtn.addEventListener("click", moveNo);
-function moveNo() {
-  noBtn.style.left = Math.random() * 80 + "vw";
-  noBtn.style.top = Math.random() * 80 + "px";
-}
+  /* FLOATING HEARTS */
+  setInterval(() => {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.animationDuration = Math.random() * 3 + 6 + "s";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 9000);
+  }, 300);
 
-/* YES EXPLOSION */
-yesBtn.addEventListener("click", e => {
-  const r = yesBtn.getBoundingClientRect();
-  for (let i = 0; i < 30; i++) {
-    const h = document.createElement("div");
-    h.className = "explode-heart";
-    h.style.left = r.left + r.width / 2 + "px";
-    h.style.top = r.top + r.height / 2 + "px";
-    h.style.setProperty("--x", (Math.random()-0.5)*300 + "px");
-    h.style.setProperty("--y", (Math.random()-0.5)*300 + "px");
-    document.body.appendChild(h);
-    setTimeout(() => h.remove(), 1000);
+  /* NO BUTTON */
+  const noBtn = document.getElementById("noBtn");
+  noBtn.addEventListener("mouseover", moveNo);
+  noBtn.addEventListener("click", moveNo);
+
+  function moveNo() {
+    noBtn.style.left = Math.random() * 80 + "vw";
+    noBtn.style.top = Math.random() * 80 + "px";
   }
-  popup.style.display = "flex";
+
+  /* YES BUTTON + HEART EXPLOSION */
+  const yesBtn = document.getElementById("yesBtn");
+  const popup = document.getElementById("popup");
+
+  yesBtn.addEventListener("click", () => {
+    const r = yesBtn.getBoundingClientRect();
+
+    for (let i = 0; i < 30; i++) {
+      const h = document.createElement("div");
+      h.className = "explode-heart";
+      h.style.left = r.left + r.width / 2 + "px";
+      h.style.top = r.top + r.height / 2 + "px";
+      h.style.setProperty("--x", (Math.random() - 0.5) * 300 + "px");
+      h.style.setProperty("--y", (Math.random() - 0.5) * 300 + "px");
+      document.body.appendChild(h);
+      setTimeout(() => h.remove(), 1000);
+    }
+
+    popup.style.display = "flex";
+  });
+
 });
 </script>
+
 
 </body>
 </html>
