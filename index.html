@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8">
 <title>Just For You 💖</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
@@ -16,12 +16,16 @@ body {
   overflow: hidden;
   font-family: 'Pacifico', cursive;
   color: #b30059;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* ---------- PASSWORD ---------- */
+/* LOCK */
 #lockScreen {
   position: fixed;
   inset: 0;
+  background: inherit;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -30,10 +34,10 @@ body {
 
 .lock-box {
   background: white;
-  padding: 40px 30px;
+  padding: 35px;
   border-radius: 25px;
   width: 90%;
-  max-width: 350px;
+  max-width: 340px;
   text-align: center;
   box-shadow: 0 20px 40px rgba(0,0,0,0.25);
 }
@@ -50,7 +54,7 @@ body {
 }
 
 .lock-box button {
-  margin-top: 20px;
+  margin-top: 18px;
   padding: 14px 28px;
   border-radius: 28px;
   border: none;
@@ -65,34 +69,29 @@ body {
   margin-top: 10px;
 }
 
-/* ---------- SCENES ---------- */
-.scene {
-  position: fixed;
-  inset: 0;
-  display: flex;
+/* STORY CONTAINER */
+#story {
+  width: 100%;
+  height: 100%;
+  display: none;
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 40px 25px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 1s ease;
-  z-index: 10;
+  padding: 30px;
 }
 
-.scene.active {
-  opacity: 1;
-  pointer-events: auto;
+/* TEXT */
+h1 {
+  font-size: 3.6rem;
 }
 
-h1 { font-size: 3.6rem; }
 p {
   font-size: 1.7rem;
   max-width: 750px;
   line-height: 1.6;
 }
 
-/* ---------- BUTTONS ---------- */
+/* BUTTONS */
 .buttons {
   position: relative;
   height: 200px;
@@ -122,17 +121,16 @@ button.choice {
   transform: translateX(20%);
 }
 
-/* ---------- POPUP ---------- */
+/* POPUP */
 #popup {
   position: fixed;
   inset: 0;
   background: rgba(255,192,203,0.96);
-  z-index: 50;
   display: none;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  text-align: center;
+  z-index: 50;
 }
 
 #popup h1 {
@@ -143,14 +141,13 @@ button.choice {
   font-size: 2.2rem;
 }
 
-/* ---------- HEARTS ---------- */
+/* HEARTS */
 .heart, .explode-heart {
   position: fixed;
   width: 18px;
   height: 18px;
   background: red;
   transform: rotate(45deg);
-  z-index: 1;
 }
 
 .heart::before, .heart::after,
@@ -192,34 +189,20 @@ button.choice {
 
 <body>
 
-<!-- PASSWORD -->
+<!-- LOCK -->
 <div id="lockScreen">
   <div class="lock-box">
     <h2>🔒 Private</h2>
     <p>Enter our anniversary date 💕</p>
-    <input id="password" />
+    <input id="password">
     <button id="unlockBtn">Unlock 💖</button>
     <div id="error">Wrong password 😜</div>
   </div>
 </div>
 
-<!-- SCENES -->
-<div class="scene active" id="scene1">
-  <h1 id="t1"></h1>
-</div>
-
-<div class="scene" id="scene2">
-  <p id="t2"></p>
-</div>
-
-<div class="scene" id="scene3">
-  <div>
-    <h1>Will you be my Valentine? 💘</h1>
-    <div class="buttons">
-      <button class="choice" id="yesBtn">Yes 💖</button>
-      <button class="choice" id="noBtn">No 😜</button>
-    </div>
-  </div>
+<!-- STORY -->
+<div id="story">
+  <div id="content"></div>
 </div>
 
 <!-- POPUP -->
@@ -234,23 +217,19 @@ document.addEventListener("DOMContentLoaded", () => {
 const CORRECT_PASSWORD = "31102025";
 const lock = document.getElementById("lockScreen");
 const error = document.getElementById("error");
+const story = document.getElementById("story");
+const content = document.getElementById("content");
+const popup = document.getElementById("popup");
 
-document.getElementById("unlockBtn").onclick = () => {
-  if (password.value === CORRECT_PASSWORD) {
-    lock.style.display = "none";
-    startStory();
-  } else {
-    error.style.display = "block";
-  }
-};
+let heartInterval;
 
-/* TYPEWRITER (SEQUENTIAL & SAFE) */
-function type(el, text, speed = 70) {
+/* TYPEWRITER */
+function typeText(text, speed = 70) {
   return new Promise(resolve => {
-    el.textContent = "";
+    content.textContent = "";
     let i = 0;
     const timer = setInterval(() => {
-      el.textContent += text[i++];
+      content.textContent += text[i++];
       if (i === text.length) {
         clearInterval(timer);
         resolve();
@@ -259,57 +238,76 @@ function type(el, text, speed = 70) {
   });
 }
 
-function switchScene(n) {
-  document.querySelectorAll(".scene").forEach(s => s.classList.remove("active"));
-  document.getElementById("scene"+n).classList.add("active");
+/* HEART FLOW */
+function startHearts() {
+  heartInterval = setInterval(() => {
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.style.left = Math.random() * 100 + "vw";
+    document.body.appendChild(h);
+    setTimeout(() => h.remove(), 9000);
+  }, 350);
 }
 
+/* STORY FLOW */
 async function startStory() {
-  await type(t1, "Hi Sanjeev 😉");
-  await wait(800);
-  switchScene(2);
-  await type(
-    t2,
-    "From random laughs to quiet moments, from silly jokes to deep conversations… every day with you feels like home my husband ❤️Oru murai paarthal pala murai inikira enna visithiramo, nanbane enaku kaadhalan aanal athu than sarithiramo♥️ "
+  story.style.display = "flex";
+  startHearts();
+
+  await typeText("Hi Sanjeev 😉");
+  await wait(1200);
+
+  await typeText(
+    "From random laughs to quiet moments, from silly jokes to deep conversations… every day with you feels like home my husband❤️Oru murai paarthal pala murai inikira enna visithiramo, nanbane enaku kaadhalan aanal athu than sarithiramo♥️"
   );
-  await wait(1000);
-  switchScene(3);
+  await wait(1200);
+
+  content.innerHTML = `
+    <h1>Will you be my Valentine? 💘</h1>
+    <div class="buttons">
+      <button class="choice" id="yesBtn">Yes 💖</button>
+      <button class="choice" id="noBtn">No 😜</button>
+    </div>
+  `;
+
+  const yesBtn = document.getElementById("yesBtn");
+  const noBtn = document.getElementById("noBtn");
+
+  noBtn.onmouseover = noBtn.onclick = () => {
+    noBtn.style.left = Math.random() * 80 + "vw";
+    noBtn.style.top = Math.random() * 80 + "px";
+  };
+
+  yesBtn.onclick = () => {
+    clearInterval(heartInterval);
+    story.style.display = "none";
+    popup.style.display = "flex";
+
+    const r = yesBtn.getBoundingClientRect();
+    for (let i = 0; i < 30; i++) {
+      const e = document.createElement("div");
+      e.className = "explode-heart";
+      e.style.left = r.left + r.width / 2 + "px";
+      e.style.top = r.top + r.height / 2 + "px";
+      e.style.setProperty("--x", (Math.random()-0.5)*300 + "px");
+      e.style.setProperty("--y", (Math.random()-0.5)*300 + "px");
+      document.body.appendChild(e);
+      setTimeout(() => e.remove(), 1000);
+    }
+  };
 }
 
 function wait(ms) {
   return new Promise(r => setTimeout(r, ms));
 }
 
-/* FLOATING HEARTS */
-setInterval(() => {
-  const h = document.createElement("div");
-  h.className = "heart";
-  h.style.left = Math.random() * 100 + "vw";
-  document.body.appendChild(h);
-  setTimeout(() => h.remove(), 9000);
-}, 350);
-
-/* NO BUTTON */
-noBtn.onmouseover = noBtn.onclick = () => {
-  noBtn.style.left = Math.random() * 80 + "vw";
-  noBtn.style.top = Math.random() * 80 + "px";
-};
-
-/* YES BUTTON */
-yesBtn.onclick = () => {
-  document.querySelectorAll(".scene").forEach(s => s.style.display = "none");
-  popup.style.display = "flex";
-
-  const r = yesBtn.getBoundingClientRect();
-  for (let i = 0; i < 30; i++) {
-    const e = document.createElement("div");
-    e.className = "explode-heart";
-    e.style.left = r.left + r.width/2 + "px";
-    e.style.top = r.top + r.height/2 + "px";
-    e.style.setProperty("--x", (Math.random()-0.5)*300+"px");
-    e.style.setProperty("--y", (Math.random()-0.5)*300+"px");
-    document.body.appendChild(e);
-    setTimeout(() => e.remove(), 1000);
+/* UNLOCK */
+document.getElementById("unlockBtn").onclick = () => {
+  if (password.value === CORRECT_PASSWORD) {
+    lock.style.display = "none";
+    startStory();
+  } else {
+    error.style.display = "block";
   }
 };
 
