@@ -14,19 +14,17 @@ body {
   height: 100vh;
   background: linear-gradient(135deg, #ffc0cb, #ff9abf);
   overflow: hidden;
-  text-align: center;
-  color: #b30059;
   font-family: 'Pacifico', cursive;
+  color: #b30059;
 }
 
-/* PASSWORD */
+/* ---------- PASSWORD ---------- */
 #lockScreen {
   position: fixed;
   inset: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: inherit;
   z-index: 100;
 }
 
@@ -36,6 +34,7 @@ body {
   border-radius: 25px;
   width: 90%;
   max-width: 350px;
+  text-align: center;
   box-shadow: 0 20px 40px rgba(0,0,0,0.25);
 }
 
@@ -66,32 +65,34 @@ body {
   margin-top: 10px;
 }
 
-/* SCENES */
+/* ---------- SCENES ---------- */
 .scene {
-  position: absolute;
+  position: fixed;
   inset: 0;
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
   padding: 40px 25px;
   opacity: 0;
-  transform: translateY(20px);
-  transition: all 1s ease;
+  pointer-events: none;
+  transition: opacity 1s ease;
+  z-index: 10;
 }
 
 .scene.active {
   opacity: 1;
-  transform: translateY(0);
+  pointer-events: auto;
 }
 
-h1 { font-size: 3.8rem; }
+h1 { font-size: 3.6rem; }
 p {
-  font-size: 1.8rem;
+  font-size: 1.7rem;
   max-width: 750px;
   line-height: 1.6;
 }
 
-/* BUTTONS */
+/* ---------- BUTTONS ---------- */
 .buttons {
   position: relative;
   height: 200px;
@@ -103,8 +104,8 @@ button.choice {
   padding: 18px 42px;
   border-radius: 40px;
   border: none;
-  position: absolute;
   cursor: pointer;
+  position: absolute;
 }
 
 #yesBtn {
@@ -121,28 +122,35 @@ button.choice {
   transform: translateX(20%);
 }
 
-/* POPUP */
+/* ---------- POPUP ---------- */
 #popup {
-  display: none;
   position: fixed;
   inset: 0;
-  background: rgba(255,192,203,0.95);
-  z-index: 90;
-  display: flex;
+  background: rgba(255,192,203,0.96);
+  z-index: 50;
+  display: none;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  font-size: 3.2rem;
+  text-align: center;
 }
 
-/* HEARTS */
+#popup h1 {
+  font-size: 4rem;
+}
+
+#popup p {
+  font-size: 2.2rem;
+}
+
+/* ---------- HEARTS ---------- */
 .heart, .explode-heart {
   position: fixed;
   width: 18px;
   height: 18px;
   background: red;
   transform: rotate(45deg);
-  z-index: 0;
+  z-index: 1;
 }
 
 .heart::before, .heart::after,
@@ -160,16 +168,17 @@ button.choice {
 
 .heart {
   animation: float 9s linear infinite;
+  opacity: 0.6;
 }
 
 @keyframes float {
-  from { transform: translateY(110vh) rotate(45deg); opacity: 1; }
-  to { transform: translateY(-10vh) rotate(45deg); opacity: 0; }
+  from { transform: translateY(110vh) rotate(45deg); }
+  to { transform: translateY(-10vh) rotate(45deg); }
 }
 
 .explode-heart {
   animation: explode 1s ease-out forwards;
-  pointer-events: none;
+  z-index: 60;
 }
 
 @keyframes explode {
@@ -213,16 +222,16 @@ button.choice {
   </div>
 </div>
 
+<!-- POPUP -->
 <div id="popup">
-  <div>YAYYY!! 💋💐</div>
-  <div style="margin-top:20px;">I love you ❤️</div>
+  <h1>YAYYY!! 💋💐</h1>
+  <p>I love you ❤️</p>
 </div>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
 const CORRECT_PASSWORD = "31102025";
-
 const lock = document.getElementById("lockScreen");
 const error = document.getElementById("error");
 
@@ -235,7 +244,7 @@ document.getElementById("unlockBtn").onclick = () => {
   }
 };
 
-/* PERFECT TYPEWRITER */
+/* TYPEWRITER (SEQUENTIAL & SAFE) */
 function type(el, text, speed = 70) {
   return new Promise(resolve => {
     el.textContent = "";
@@ -250,21 +259,21 @@ function type(el, text, speed = 70) {
   });
 }
 
+function switchScene(n) {
+  document.querySelectorAll(".scene").forEach(s => s.classList.remove("active"));
+  document.getElementById("scene"+n).classList.add("active");
+}
+
 async function startStory() {
   await type(t1, "Hi Sanjeev 😉");
   await wait(800);
   switchScene(2);
   await type(
     t2,
-    "From random laughs to quiet moments, from silly jokes to deep conversations… every day with you feels like home my husband ❤️Oru murai paarthal pala murai inikira enna visithiramo, nanbane enaku kaadhalan aanal athu than sarithiramo♥️"
+    "From random laughs to quiet moments, from silly jokes to deep conversations… every day with you feels like home my husband ❤️Oru murai paarthal pala murai inikira enna visithiramo, nanbane enaku kaadhalan aanal athu than sarithiramo♥️ "
   );
   await wait(1000);
   switchScene(3);
-}
-
-function switchScene(n) {
-  document.querySelectorAll(".scene").forEach(s => s.classList.remove("active"));
-  document.getElementById(`scene${n}`).classList.add("active");
 }
 
 function wait(ms) {
@@ -278,7 +287,7 @@ setInterval(() => {
   h.style.left = Math.random() * 100 + "vw";
   document.body.appendChild(h);
   setTimeout(() => h.remove(), 9000);
-}, 300);
+}, 350);
 
 /* NO BUTTON */
 noBtn.onmouseover = noBtn.onclick = () => {
@@ -288,6 +297,9 @@ noBtn.onmouseover = noBtn.onclick = () => {
 
 /* YES BUTTON */
 yesBtn.onclick = () => {
+  document.querySelectorAll(".scene").forEach(s => s.style.display = "none");
+  popup.style.display = "flex";
+
   const r = yesBtn.getBoundingClientRect();
   for (let i = 0; i < 30; i++) {
     const e = document.createElement("div");
@@ -299,7 +311,6 @@ yesBtn.onclick = () => {
     document.body.appendChild(e);
     setTimeout(() => e.remove(), 1000);
   }
-  popup.style.display = "flex";
 };
 
 });
