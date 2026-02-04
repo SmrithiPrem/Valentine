@@ -1,176 +1,312 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>My Valentine 💖</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: 'Comic Sans MS', 'Poppins', cursive;
-    }
+<meta charset="UTF-8" />
+<title>Just For You 💖</title>
 
-    body {
-      margin: 0;
-      background: #ffc0cb;
-      overflow-x: hidden;
-      text-align: center;
-      color: #b30059;
-    }
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
 
-    section {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 40px 20px;
-    }
+<style>
+* { box-sizing: border-box; }
 
-    h1 {
-      font-size: 3rem;
-    }
+body {
+  margin: 0;
+  background: linear-gradient(135deg, #ffc0cb, #ff9abf);
+  overflow-x: hidden;
+  text-align: center;
+  color: #b30059;
+  font-family: 'Pacifico', cursive;
+}
 
-    p {
-      font-size: 1.3rem;
-      max-width: 700px;
-    }
+/* PASSWORD SCREEN */
+#lockScreen {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, #ffc0cb, #ff9abf);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+}
 
-    .buttons {
-      margin-top: 30px;
-      position: relative;
-      height: 150px;
-    }
+.lock-box {
+  background: white;
+  padding: 45px 35px;
+  border-radius: 28px;
+  width: 90%;
+  max-width: 360px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+}
 
-    button {
-      font-size: 1.2rem;
-      padding: 12px 30px;
-      border: none;
-      border-radius: 30px;
-      cursor: pointer;
-      position: absolute;
-    }
+.lock-box h2 { font-size: 2.2rem; }
+.lock-box p { font-size: 1.1rem; }
 
-    #yesBtn {
-      background: #ff4d88;
-      color: white;
-      left: 50%;
-      transform: translateX(-120%);
-    }
+.lock-box input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 22px;
+  border: 1px solid #ff4d88;
+  font-size: 1.1rem;
+  outline: none;
+}
 
-    #noBtn {
-      background: #ffb3c6;
-      color: #800040;
-      left: 50%;
-      transform: translateX(20%);
-    }
+.lock-box button {
+  margin-top: 20px;
+  padding: 14px 28px;
+  border-radius: 28px;
+  border: none;
+  background: #ff4d88;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
 
-    #popup {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(255, 192, 203, 0.95);
-      z-index: 10;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      font-size: 2.5rem;
-    }
+#error {
+  display: none;
+  color: red;
+  margin-top: 10px;
+}
 
-    .heart {
-      position: fixed;
-      width: 12px;
-      height: 12px;
-      background: red;
-      transform: rotate(45deg);
-      animation: float 6s linear infinite;
-      z-index: 0;
-    }
+/* MAIN CONTENT */
+section {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 50px 25px;
+}
 
-    .heart::before,
-    .heart::after {
-      content: "";
-      width: 12px;
-      height: 12px;
-      background: red;
-      position: absolute;
-      border-radius: 50%;
-    }
+h1 {
+  font-size: 3.6rem;
+  margin-bottom: 20px;
+}
 
-    .heart::before {
-      top: -6px;
-      left: 0;
-    }
+p {
+  font-size: 1.7rem;
+  max-width: 750px;
+  line-height: 1.6;
+}
 
-    .heart::after {
-      left: -6px;
-      top: 0;
-    }
+/* TYPEWRITER */
+.type {
+  border-right: 3px solid #b30059;
+  white-space: nowrap;
+  overflow: hidden;
+  animation: blink 0.7s infinite;
+}
 
-    @keyframes float {
-      from {
-        transform: translateY(100vh) rotate(45deg);
-        opacity: 1;
-      }
-      to {
-        transform: translateY(-10vh) rotate(45deg);
-        opacity: 0;
-      }
-    }
-  </style>
+@keyframes blink {
+  50% { border-color: transparent; }
+}
+
+/* BUTTONS */
+.buttons {
+  margin-top: 40px;
+  position: relative;
+  height: 180px;
+}
+
+button {
+  font-size: 1.4rem;
+  padding: 16px 38px;
+  border-radius: 35px;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  transition: transform 0.2s;
+}
+
+button:hover { transform: scale(1.1); }
+
+#yesBtn {
+  background: #ff4d88;
+  color: white;
+  left: 50%;
+  transform: translateX(-120%);
+}
+
+#noBtn {
+  background: #ffd1dc;
+  color: #800040;
+  left: 50%;
+  transform: translateX(20%);
+}
+
+/* POPUP */
+#popup {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 192, 203, 0.95);
+  z-index: 40;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-size: 3.2rem;
+}
+
+/* FLOATING HEARTS */
+.heart {
+  position: fixed;
+  width: 16px;
+  height: 16px;
+  background: red;
+  transform: rotate(45deg);
+  animation: float 8s linear infinite;
+  z-index: 0;
+}
+
+.heart::before,
+.heart::after {
+  content: "";
+  width: 16px;
+  height: 16px;
+  background: red;
+  position: absolute;
+  border-radius: 50%;
+}
+
+.heart::before { top: -8px; }
+.heart::after { left: -8px; }
+
+@keyframes float {
+  from { transform: translateY(110vh) rotate(45deg); opacity: 1; }
+  to { transform: translateY(-10vh) rotate(45deg); opacity: 0; }
+}
+
+/* HEART EXPLOSION */
+.explode-heart {
+  position: fixed;
+  width: 18px;
+  height: 18px;
+  background: red;
+  transform: rotate(45deg);
+  animation: explode 1s ease-out forwards;
+  pointer-events: none;
+  z-index: 60;
+}
+
+.explode-heart::before,
+.explode-heart::after {
+  content: "";
+  width: 18px;
+  height: 18px;
+  background: red;
+  position: absolute;
+  border-radius: 50%;
+}
+
+.explode-heart::before { top: -9px; }
+.explode-heart::after { left: -9px; }
+
+@keyframes explode {
+  to {
+    transform: translate(var(--x), var(--y)) rotate(45deg);
+    opacity: 0;
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <section>
-    <h1>Hi Sanjeev 😉</h1>
-    <p>Scroll down… I have something special for you 💕</p>
-  </section>
-
-  <section>
-    <p>
-      From random laughs to quiet moments,<br>
-      from silly jokes to deep conversations…<br>
-      every day with you feels like home ❤️<br><br>
-      You make my world softer, happier, and so full of love.
-    </p>
-  </section>
-
-  <section>
-    <h1>Will you be my Valentine? 💘</h1>
-    <div class="buttons">
-      <button id="yesBtn">Yes 💖</button>
-      <button id="noBtn">No 😜</button>
-    </div>
-  </section>
-
-  <div id="popup">
-    <div>YAYYY!! 💋💐</div>
-    <div style="margin-top:20px;">I love you ❤️</div>
+<!-- PASSWORD -->
+<div id="lockScreen">
+  <div class="lock-box">
+    <h2>🔒 Private</h2>
+    <p>Enter our anniversary date in numbers 💕</p>
+    <input id="password" type="password" />
+    <button onclick="unlock()">Unlock 💖</button>
+    <div id="error">Wrong password 😜</div>
   </div>
+</div>
 
-  <script>
-    function createHeart() {
-      const heart = document.createElement('div');
-      heart.className = 'heart';
-      heart.style.left = Math.random() * 100 + 'vw';
-      heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
-      document.body.appendChild(heart);
-      setTimeout(() => heart.remove(), 7000);
-    }
-    setInterval(createHeart, 300);
+<section>
+  <h1 class="type" id="t1"></h1>
+</section>
 
-    const noBtn = document.getElementById('noBtn');
-    function moveNo() {
-      noBtn.style.left = Math.random() * 80 + 'vw';
-      noBtn.style.top = Math.random() * 60 + 'px';
-    }
-    noBtn.addEventListener('mouseover', moveNo);
-    noBtn.addEventListener('click', moveNo);
+<section>
+  <p class="type" id="t2"></p>
+</section>
 
-    document.getElementById('yesBtn').addEventListener('click', () => {
-      document.getElementById('popup').style.display = 'flex';
-    });
-  </script>
+<section>
+  <h1>Will you be my Valentine? 💘</h1>
+  <div class="buttons">
+    <button id="yesBtn">Yes 💖</button>
+    <button id="noBtn">No 😜</button>
+  </div>
+</section>
+
+<div id="popup">
+  <div>YAYYY!! 💋💐</div>
+  <div style="margin-top:20px;">I love you ❤️</div>
+</div>
+
+<script>
+/* PASSWORD */
+function unlock() {
+  if (password.value === "31/10/2025") {
+    lockScreen.style.display = "none";
+  } else {
+    error.style.display = "block";
+  }
+}
+
+/* TYPEWRITER */
+function typeText(el, text, speed = 80) {
+  let i = 0;
+  const interval = setInterval(() => {
+    el.textContent += text[i];
+    i++;
+    if (i === text.length) clearInterval(interval);
+  }, speed);
+}
+
+typeText(t1, "Hi Sanjeev 😉");
+setTimeout(() => {
+  typeText(
+    t2,
+    "Every day with you feels like home♥️, my husband.
+    oru murai parthal, pala murai inikira ena visithiramo
+    nanbane enaku kadhalan aanal athu than sarithiramo"
+  );
+}, 1200);
+
+/* FLOATING HEARTS */
+setInterval(() => {
+  const heart = document.createElement("div");
+  heart.className = "heart";
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.animationDuration = Math.random() * 3 + 6 + "s";
+  document.body.appendChild(heart);
+  setTimeout(() => heart.remove(), 9000);
+}, 300);
+
+/* NO BUTTON */
+noBtn.addEventListener("mouseover", moveNo);
+noBtn.addEventListener("click", moveNo);
+function moveNo() {
+  noBtn.style.left = Math.random() * 80 + "vw";
+  noBtn.style.top = Math.random() * 80 + "px";
+}
+
+/* YES EXPLOSION */
+yesBtn.addEventListener("click", e => {
+  const r = yesBtn.getBoundingClientRect();
+  for (let i = 0; i < 30; i++) {
+    const h = document.createElement("div");
+    h.className = "explode-heart";
+    h.style.left = r.left + r.width / 2 + "px";
+    h.style.top = r.top + r.height / 2 + "px";
+    h.style.setProperty("--x", (Math.random()-0.5)*300 + "px");
+    h.style.setProperty("--y", (Math.random()-0.5)*300 + "px");
+    document.body.appendChild(h);
+    setTimeout(() => h.remove(), 1000);
+  }
+  popup.style.display = "flex";
+});
+</script>
 
 </body>
 </html>
